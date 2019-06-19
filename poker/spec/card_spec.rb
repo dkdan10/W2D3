@@ -28,7 +28,7 @@ describe Card do
     end
 
     it "should return 13 cards of each suit" do
-      expect([:heart, :space, :club, :diamond].all? {|suit| deck.select {|card| card.suit == suit}.length == 13} ).to be(true)
+      expect([:club, :diamond, :heart, :spade].all? {|suit| deck.select {|card| card.suit == suit}.length == 13} ).to be(true)
     end
 
     it "should return 4 cards of each number" do
