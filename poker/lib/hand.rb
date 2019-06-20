@@ -1,7 +1,7 @@
 require_relative 'deck'
 
 class Hand
-  attr_reader :cards
+  attr_accessor :cards
 
   def initialize(deck)
     @cards = []
@@ -12,7 +12,7 @@ class Hand
   end
 
   def rank
-    cards = self.cards.sort
+    # cards = self.cards.sort
     hand_type
   end
 
@@ -21,7 +21,7 @@ class Hand
   def hand_type
     is_straight = straight
     is_flush = flush
-    :straight_flush if is_straight && is_flush
+    return :straight_flush if is_straight && is_flush
     var = get_pairs
     return var if var == :four_of_a_kind || var == :full_house
     return :flush if is_flush
@@ -31,7 +31,11 @@ class Hand
 
   def straight
     (0...(cards.length - 1)).all? do |i|
-      card[i].number == card[i+1].number - 1
+      if cards[i].number == 1
+        cards[-1].number == 13 || cards[i+1].number == 2
+      else
+        cards[i].number == cards[i+1].number - 1
+      end
     end
   end
 
@@ -41,7 +45,7 @@ class Hand
   end
 
   def get_pairs
-    multiples = Hash.new {Array.new}
+    multiples = Hash.new {|h,k| h[k] = []}
     cards.each do |card|
       multiples[card.number] << card
     end
@@ -60,11 +64,13 @@ class Hand
       return :two_of_a_kind if pairs.length == 1
       return :two_pair if pairs.length == 2
     end
-    get_high_card
+    :high_card
   end
 
   def get_high_card
-    self.cards.sort.last
+    sorted_cards = self.cards.sort
+    return sorted_cards.last unless sorted_cards.first.number == 1
+    sorted_cards.first
   end
 
 
